@@ -28,7 +28,7 @@ module "rds" {
   allowed_sg_ids     = [module.alb.alb_sg_id]
 
   db_name   = "ecomdb"
-  username  = "admin"
+  username  = "postgres"
   password  = "yourStrongPassword123"
 }
 
