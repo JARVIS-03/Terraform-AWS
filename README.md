@@ -1,7 +1,7 @@
 # Terraform-AWS
 Production-Grade AWS Infrastructure using Terraform
 
-# High-Level JPMC Based AWS Architecture Workflow:
+# High-Level AWS Architecture Workflow:
 
                  ┌───────────────────────┐
                  │      Route 53         │
