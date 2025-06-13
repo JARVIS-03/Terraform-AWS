@@ -36,25 +36,25 @@ Production-Grade AWS Infrastructure using Terraform
 
 # Security & Networking Layers:
 
-Component:	            Subnet Type:	              Access:
+                        Component:	            Subnet Type:	              Access:
 
-Route 53	                N/A	                 External DNS
-NLB	                       Public	        Accessible from the internet (TCP)
-ALB	                       Private	        Accessed by NLB or internal routing
-ECS Services	           Private	            Behind ALB, secure
-RDS	                       Private	            No public access
-NAT Gateway	               Public	        Allows outbound traffic from private subnets
-Internet Gateway	       Public	        Enables public subnet internet access
+                        Route 53	                N/A	                 External DNS
+                        NLB	                       Public	        Accessible from the internet (TCP)
+                        ALB	                       Private	        Accessed by NLB or internal routing
+                        ECS Services	           Private	            Behind ALB, secure
+                        RDS	                       Private	            No public access
+                        NAT Gateway	               Public	        Allows outbound traffic from private subnets
+                        Internet Gateway	       Public	        Enables public subnet internet access
 
 
 # Module Mapping aka Wiring:
 
-| Module         | Resources Created                       | Subnet Scope |
-| -------------- | --------------------------------------- | ------------ |
-| `vpc`          | VPC, Subnets (Public & Private), Routes | Both         |
-| `nat_gateway`  | Elastic IP, NAT Gateway                 | Public       |
-| `nlb`          | Network Load Balancer                   | Public       |
-| `alb`          | Application Load Balancer               | Private      |
-| `ecs_clusters` | ECS Cluster, Task Definitions, Services | Private      |
-| `rds`          | DB Instance, DB Subnet Group, SG        | Private      |
-| `route53`      | Hosted Zone Record                      | N/A          |
+                        | Module         | Resources Created                       | Subnet Scope |
+                        | -------------- | --------------------------------------- | ------------ |
+                        | `vpc`          | VPC, Subnets (Public & Private), Routes | Both         |
+                        | `nat_gateway`  | Elastic IP, NAT Gateway                 | Public       |
+                        | `nlb`          | Network Load Balancer                   | Public       |
+                        | `alb`          | Application Load Balancer               | Private      |
+                        | `ecs_clusters` | ECS Cluster, Task Definitions, Services | Private      |
+                        | `rds`          | DB Instance, DB Subnet Group, SG        | Private      |
+                        | `route53`      | Hosted Zone Record                      | N/A          |
