@@ -22,6 +22,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+
 # Iterate over each service
 locals {
   service_list = [for k, v in var.services : {
@@ -62,10 +63,11 @@ resource "aws_ecs_task_definition" "this" {
 resource "aws_lb_target_group" "this" {
   for_each = { for svc in local.service_list : svc.name => svc }
 
-  name     = "${var.project}-${each.key}-tg"
-  port     = each.value.port
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  name         = "${var.project}-${each.key}-tg"
+  port         = each.value.port
+  protocol     = "HTTP"
+  vpc_id       = var.vpc_id
+  target_type  = "ip"  # ✅ Required for awsvpc mode (Fargate)
 
   health_check {
     path                = each.value.health_path

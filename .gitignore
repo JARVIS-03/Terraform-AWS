@@ -1,0 +1,15 @@
+# Ignore sensitive files
+*.tfvars
+*.csv
+
+# Ignore local Terraform state and cache
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+crash.log
+
+# Optional: ignore override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json

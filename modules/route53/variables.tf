@@ -1,5 +1,11 @@
+
 variable "domain_name" {
-  description = "The root domain name (e.g., example.com)"
+  description = "The domain name to create the hosted zone for"
+  type        = string
+}
+
+variable "zone_id" {
+  description = "Route53 hosted zone ID"
   type        = string
 }
 
@@ -8,7 +14,7 @@ variable "nlb_dns_name" {
   type        = string
 }
 
-variable "zone_id" {
-  description = "Route 53 Hosted Zone ID"
+variable "nlb_zone_id" {
+  description = "NLB Zone ID"
   type        = string
 }

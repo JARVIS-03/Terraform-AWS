@@ -8,6 +8,18 @@ variable "aws_region" {
   type        = string
 }
 
+variable "aws_access_key" {
+  description = "AWS Access Key from .csv"
+  type        = string
+  sensitive   = true
+}
+
+variable "aws_secret_key" {
+  description = "AWS Secret Key from .csv"
+  type        = string
+  sensitive   = true
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
@@ -30,8 +42,14 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "ecr_image" {
+  description = "Docker Image from ECR"
+  type = string
+  
+}
+
 variable "domain_name" {
-  description = "Your root domain (e.g., example.com)"
+  description = "Subdomain to create (e.g., app.example.com)"
   type        = string
 }
 
@@ -39,3 +57,5 @@ variable "hosted_zone_id" {
   description = "Route 53 Hosted Zone ID for your domain"
   type        = string
 }
+
+

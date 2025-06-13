@@ -1,5 +1,5 @@
 output "rds_endpoint" {
-  value = aws_db_instance.this.endpoint
+  value = aws_db_instance.rds.endpoint
 }
 
 output "rds_sg_id" {

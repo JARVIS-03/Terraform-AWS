@@ -1,6 +1,16 @@
 variable "project" {
-  description = "Project prefix"
+  description = "Project name"
   type        = string
+}
+
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
+}
+
+variable "subnet_ids" {
+  description = "Private subnet IDs for RDS subnet group"
+  type        = list(string)
 }
 
 variable "db_name" {
@@ -20,17 +30,6 @@ variable "db_password" {
 }
 
 variable "db_instance_class" {
-  description = "RDS instance class"
-  type        = string
-  default     = "db.t3.micro"
-}
-
-variable "subnet_ids" {
-  description = "List of private subnet IDs for RDS"
-  type        = list(string)
-}
-
-variable "vpc_id" {
-  description = "VPC ID"
+  description = "Instance class (e.g., db.t3.micro)"
   type        = string
 }
