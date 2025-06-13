@@ -78,7 +78,7 @@ module "rds" {
 module "route53" {
   source = "./modules/route53"
 
-  domain_name     = "app.example.com"
+  domain_name     = var.domain_name
   nlb_dns_name = module.nlb.nlb_dns_name
   zone_id = var.hosted_zone_id
   nlb_zone_id = module.nlb.nlb_zone_id
