@@ -1,38 +1,38 @@
 # Terraform-AWS
 Production-Grade AWS Infrastructure using Terraform
 
-# High-Level AWS Architecture Workflow:
+                                # High-Level AWS Architecture Workflow:
 
-                 ┌───────────────────────┐
-                 │      Route 53         │
-                 │ (DNS + Subdomain)     │
-                 └─────────┬─────────────┘
-                           │
-                           ▼
-              ┌────────────────────────────┐
-              │ Network Load Balancer (NLB)│ ◄── PUBLIC SUBNET
-              └─────────┬──────────────────┘
-                        │
-              ┌────────────────────────────┐
-              │ NAT Gateway (NAT)          │ ◄── PUBLIC SUBNET
-              └─────────┬──────────────────┘
-                        ▼
-              ┌────────────────────────────┐
-              │ Application Load Balancer  │ ◄── PRIVATE SUBNET
-              └─────────┬──────────────────┘
-                        │
-        ┌───────────────┼──────────────────────────┐
-        ▼               ▼                          ▼
-┌────────────┐   ┌────────────┐           ┌────────────────────┐
-│ECS Service │   │ECS Service │   ...     │ECS Payment Service │ ◄── PRIVATE SUBNET
-│(e.g., Auth)│   │(e.g., Prod)│           │  (port 8083)        │
-└────────────┘   └────────────┘           └────────────────────┘
+                                                ┌───────────────────────┐
+                                                │      Route 53         │
+                                                │ (DNS + Subdomain)     │
+                                                └─────────┬─────────────┘
+                                                        │
+                                                        ▼
+                                        ┌────────────────────────────┐
+                                        │ Network Load Balancer (NLB)│ ◄── PUBLIC SUBNET
+                                        └─────────┬──────────────────┘
+                                                        │
+                                        ┌────────────────────────────┐
+                                        │ NAT Gateway (NAT)          │ ◄── PUBLIC SUBNET
+                                        └─────────┬──────────────────┘
+                                                        ▼
+                                        ┌────────────────────────────┐
+                                        │ Application Load Balancer  │ ◄── PRIVATE SUBNET
+                                        └─────────┬──────────────────┘
+                                                        │
+                                        ┌───────────────┼──────────────────────────┐
+                                        ▼               ▼                          ▼
+                                ┌────────────┐   ┌────────────┐           ┌────────────────────┐
+                                │ECS Service │   │ECS Service │   ...     │ECS Payment Service │ ◄── PRIVATE SUBNET
+                                │(e.g., Auth)│   │(e.g., Prod)│           │  (port 8083)       │
+                                └────────────┘   └────────────┘           └────────────────────┘
 
-                        │
-                        ▼
-                 ┌──────────────┐
-                 │    RDS DB    │ ◄── PRIVATE SUBNET
-                 └──────────────┘
+                                                        │
+                                                        ▼
+                                                ┌──────────────┐
+                                                │    RDS DB    │ ◄── PRIVATE SUBNET
+                                                └──────────────┘
 
 # Security & Networking Layers:
 
