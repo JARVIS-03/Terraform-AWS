@@ -23,7 +23,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_attach" {
 }
 
 
-# Iterate over each service
+# Used For Each to Iterate over each service
 locals {
   service_list = [for k, v in var.services : {
     name          = k
