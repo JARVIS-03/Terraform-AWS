@@ -11,7 +11,7 @@ resource "aws_nat_gateway" "this" {
 
   tags = {
     Name = "nat-gateway-${count.index}"
-    Name = "nat-eip-${count.index}"
+    EIP-Name   = "nat-eip-${count.index}"
   }
   
 }
