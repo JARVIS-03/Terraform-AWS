@@ -5,13 +5,10 @@ resource "aws_lb" "nlb" {
   subnets            = var.subnet_ids
 }
 
-# resource "aws_lb_listener" "tcp" {
-#   load_balancer_arn = aws_lb.nlb.arn
-#   port              = 443
-#   protocol          = "TCP"
-
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.backend.arn
-#   }
-# }
+resource "aws_lb_target_group" "nlb_tg" {
+  name        = "${var.project}-nlb-tg"
+  port        = 80
+  protocol    = "TCP" # NLB uses TCP
+  vpc_id      = var.vpc_id
+  target_type = "ip" # or "alb" if using ALB IPs
+}
