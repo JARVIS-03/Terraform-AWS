@@ -7,6 +7,6 @@ resource "aws_route53_record" "nlb_alias" {
   alias {
     name                   = var.nlb_dns_name
     zone_id                = var.nlb_zone_id
-    evaluate_target_health = false
+    evaluate_target_health = true
   }
 }

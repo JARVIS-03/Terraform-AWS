@@ -18,7 +18,40 @@ variable "alb_listener_arn" {
   type        = string
 }
 
+# variable "db_username" {
+#   description = "Username for the RDS instance"
+#   type        = string
+# }
+#
+#
+# variable "db_password" {
+#   description = "Password for RDS master user"
+#   type        = string
+#   sensitive   = true
+# }
+#
+variable "aws_region" {
+  description = "AWS region"
+  default = "us-east-1"
+  type        = string
+}
 
+variable "ecr_image" {
+  description = "Docker Image from ECR"
+  type = string
+
+}
+
+variable "alb_sg_id" {
+  type        = string
+}
+
+variable "alb_target_arn" {
+  type        = string
+}
+
+variable "alb_listener" {
+}
 
 variable "services" {
   description = "Map of ECS services with container definition info"

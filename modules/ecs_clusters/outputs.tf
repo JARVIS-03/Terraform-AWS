@@ -10,6 +10,11 @@ output "task_definition_arns" {
   value = { for svc, def in aws_ecs_task_definition.this : svc => def.arn }
 }
 
-output "target_group_arns" {
-  value = { for svc, tg in aws_lb_target_group.this : svc => tg.arn }
+# output "target_group_arns" {
+#   value = { for svc, tg in aws_lb_target_group.this : svc => tg.arn }
+# }
+
+output "ecs_security_grp_id" {
+  value = aws_security_group.ecs_sg.id
 }
+

@@ -33,3 +33,7 @@ variable "db_instance_class" {
   description = "Instance class (e.g., db.t3.micro)"
   type        = string
 }
+
+variable "ecs_sg_id" {
+  type = string
+}

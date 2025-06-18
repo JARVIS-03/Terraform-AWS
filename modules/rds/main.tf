@@ -12,7 +12,7 @@ resource "aws_security_group" "rds_sg" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"] # Need to update based on our CIDR requirements
+    security_groups = [var.ecs_sg_id]
   }
 
   egress {
@@ -41,3 +41,4 @@ resource "aws_db_instance" "rds" {
   multi_az                = false  # Set to true for prod
   deletion_protection     = false  # Set to true for prod
 }
+

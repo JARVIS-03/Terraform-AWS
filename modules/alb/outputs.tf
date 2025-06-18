@@ -17,3 +17,12 @@ output "listener_arn" {
   description = "The ARN of the ALB listener"
   value       = aws_lb_listener.http.arn
 }
+
+output "listener" {
+  description = "The ARN of the ALB listener"
+  value       = aws_lb_listener.http
+}
+
+output "alb_security_grp_id" {
+  value = aws_security_group.alb_sg.id
+}

@@ -12,6 +12,7 @@ module "vpc" {
   azs              = var.azs
   public_subnet_cidrs     = ["10.0.1.0/24", "10.0.2.0/24"]
   private_subnet_cidrs   = ["10.0.3.0/24", "10.0.4.0/24"]
+  nat_gateway_ids = module.nat_gateway.nat_gateway_ids
 }
 
 #NAT Gateway Module Config:
@@ -35,7 +36,6 @@ module "alb" {
   project     = var.project
   vpc_id      = module.vpc.vpc_id
   subnet_ids  = module.vpc.private_subnet_ids
-  alb_sg_id   = aws_security_group.alb_sg.id
 }
 
 #ECS Cluster Module Config:
@@ -45,15 +45,18 @@ module "ecs_clusters" {
   vpc_id             = module.vpc.vpc_id
   subnet_ids         = module.vpc.private_subnet_ids 
   alb_listener_arn   = module.alb.listener_arn
-
+  ecr_image = var.ecr_image
+  alb_sg_id = module.alb.alb_security_grp_id
+  alb_target_arn=module.alb.target_group_arn
+  alb_listener = module.alb.listener
   services = {
     payment = {
       container_name = "payment-service"
-      container_port = 8080
+      container_port = 8082
       cpu            = 256
       memory         = 512
       desired_count  = 2
-      image          = "var.ecr_image"
+      image          = "public.ecr.aws/i1v2i8s3/order-service"
       health_path    = "/actuator/health"
     }
   }
@@ -72,6 +75,7 @@ module "rds" {
   db_username     = var.db_username
   db_password     = var.db_password
   db_instance_class = "db.t3.micro"
+  ecs_sg_id = module.ecs_clusters.ecs_security_grp_id
 }
 
 #Route 53 Config:
@@ -84,34 +88,5 @@ module "route53" {
   nlb_zone_id = module.nlb.nlb_zone_id
 }
 
-
-#Creating Security Group Module Here:
-
-resource "aws_security_group" "alb_sg" {
-  name        = "${var.project}-alb-sg"
-  description = "Allow HTTP"
-  vpc_id      = module.vpc.vpc_id
-
-  # Allow ingress from ALB only (for service-to-service communication)
-  ingress {
-    description     = "Allow traffic from ALB"
-    from_port       = 8083
-    to_port         = 8083
-    protocol        = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Allow outbound traffic to internet or RDS
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${var.project}-alb-sg"
-  }
-}
 
 

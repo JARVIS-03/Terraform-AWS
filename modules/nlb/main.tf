@@ -7,7 +7,7 @@ resource "aws_lb" "nlb" {
 
 resource "aws_lb_target_group" "nlb_tg" {
   name        = "${var.project}-nlb-tg"
-  port        = 80
+  port        = 8082
   protocol    = "TCP" # NLB uses TCP
   vpc_id      = var.vpc_id
   target_type = "ip" # or "alb" if using ALB IPs
@@ -15,7 +15,7 @@ resource "aws_lb_target_group" "nlb_tg" {
 
 resource "aws_lb_listener" "nlb_listener" {
   load_balancer_arn = aws_lb.nlb.arn
-  port              = 80
+  port              = 8082
   protocol          = "TCP"
 
   default_action {
@@ -23,4 +23,6 @@ resource "aws_lb_listener" "nlb_listener" {
     target_group_arn = aws_lb_target_group.nlb_tg.arn
   }
 }
+
+
 
