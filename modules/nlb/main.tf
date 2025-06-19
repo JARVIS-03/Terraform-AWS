@@ -3,7 +3,12 @@ resource "aws_lb" "nlb" {
   load_balancer_type = "network"
   internal           = false
   subnets            = var.subnet_ids
+
+  tags = {
+    Name = "${var.project}-nlb"
+  }
 }
+
 
 resource "aws_lb_target_group" "nlb_tg" {
   name        = "${var.project}-nlb-tg"
@@ -12,6 +17,7 @@ resource "aws_lb_target_group" "nlb_tg" {
   vpc_id      = var.vpc_id
   target_type = "ip" # or "alb" if using ALB IPs
 }
+
 
 resource "aws_lb_listener" "nlb_listener" {
   load_balancer_arn = aws_lb.nlb.arn

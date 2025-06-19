@@ -18,6 +18,15 @@ variable "alb_listener_arn" {
   type        = string
 }
 
+variable "alb_sg_id" {
+  description = "ALB Security Group ID"
+  type        = string
+}
+
+variable "aws_region" {
+  type        = string
+  description = "AWS Region"
+}
 
 
 variable "services" {

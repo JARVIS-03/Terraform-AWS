@@ -49,12 +49,12 @@ variable "ecr_image" {
 }
 
 variable "domain_name" {
-  description = "Subdomain to create (e.g., app.example.com)"
+  description = "domain to create (e.g., example.com)"
   type        = string
 }
 
-variable "hosted_zone_id" {
-  description = "Route 53 Hosted Zone ID for your domain"
+variable "record_name" {
+  description = "subdomain to create (e.g., app.example.com)"
   type        = string
 }
 

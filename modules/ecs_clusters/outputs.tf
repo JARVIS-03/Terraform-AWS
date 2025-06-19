@@ -13,3 +13,7 @@ output "task_definition_arns" {
 output "target_group_arns" {
   value = { for svc, tg in aws_lb_target_group.this : svc => tg.arn }
 }
+
+output "ecs_service_sg_id" {
+  value = aws_security_group.ecs_service.id
+}

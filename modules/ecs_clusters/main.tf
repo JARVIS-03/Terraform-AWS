@@ -37,6 +37,7 @@ locals {
   }]
 }
 
+
 resource "aws_ecs_task_definition" "this" {
   for_each = { for svc in local.service_list : svc.name => svc }
 
@@ -46,6 +47,7 @@ resource "aws_ecs_task_definition" "this" {
   cpu                      = each.value.cpu
   memory                   = each.value.memory
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
+  task_role_arn            = aws_iam_role.ecs_task_execution.arn
 
   container_definitions = jsonencode([
     {
@@ -56,8 +58,30 @@ resource "aws_ecs_task_definition" "this" {
         protocol      = "tcp"
       }]
       essential = true
+      logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/${var.project}-${each.key}"
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "ecs"
+      }
+    }
+    healthCheck = {
+        command     = ["CMD-SHELL", "curl -f http://localhost${each.value.health_path} || exit 1"]
+        interval    = 30
+        timeout     = 5
+        retries     = 3
+        startPeriod = 10
+      }
     }
   ])
+}
+
+# CloudWatch Log Group for Logging
+resource "aws_cloudwatch_log_group" "ecs" {
+  for_each = { for svc in local.service_list : svc.name => svc }
+  name     = "/ecs/${var.project}-${each.key}"
+  retention_in_days = 7
 }
 
 resource "aws_lb_target_group" "this" {
@@ -76,6 +100,9 @@ resource "aws_lb_target_group" "this" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
     matcher             = "200"
+  }
+   tags = {
+    Name = "${var.project}-${each.key}-tg"
   }
 }
 
@@ -96,6 +123,37 @@ resource "aws_lb_listener_rule" "this" {
   }
 }
 
+# ECS Cluster Security Group
+resource "aws_security_group" "ecs_service" {
+  name   = "${var.project}-ecs-service-sg"
+  vpc_id = var.vpc_id
+
+# Allow traffic from ALB Security Group
+  ingress {
+    from_port       = 8083
+    to_port         = 8083
+    protocol        = "tcp"
+    security_groups = [var.alb_sg_id]
+    description     = "Allow from ALB"
+  }
+
+  # Allow ECS services to reach the internet (for pulling images, etc.)
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project}-ecs-service-sg"
+  }
+}
+
+
+
+
+
 resource "aws_ecs_service" "this" {
   for_each = { for svc in local.service_list : svc.name => svc }
 
@@ -107,7 +165,7 @@ resource "aws_ecs_service" "this" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    security_groups  = [] # optionally we can attach ECS Security Group
+    security_groups  = [aws_security_group.ecs_service.id]
     assign_public_ip = false
   }
 
@@ -117,5 +175,9 @@ resource "aws_ecs_service" "this" {
     container_port   = each.value.port
   }
 
-  depends_on = [aws_lb_listener_rule.this]
+  depends_on = [
+    aws_lb_listener_rule.this,
+    aws_iam_role_policy_attachment.ecs_task_execution_attach,
+    aws_cloudwatch_log_group.ecs
+  ]
 }
