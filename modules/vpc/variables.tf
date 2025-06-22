@@ -22,3 +22,9 @@ variable "azs" {
   description = "List of availability zones"
   type        = list(string)
 }
+
+variable "nat_gateway_ids" {
+  description = "List of NAT Gateway IDs"
+  type = list(string)
+}
+

@@ -57,6 +57,30 @@ resource "aws_ecs_task_definition" "this" {
         containerPort = each.value.port
         protocol      = "tcp"
       }]
+
+      "environment": [
+  {
+    name: "DB_HOST",
+    value: var.db_host
+  },
+  {
+    name  = "DB_PORT"
+    value = var.db_port
+  },
+  {
+    name  = "DB_NAME"
+    value = var.db_name
+  },
+  {
+    name  = "DB_USERNAME"
+    value = var.db_username
+  },
+  {
+    name  = "DB_PASSWORD"
+    value = var.db_password
+  }
+]
+
       essential = true
       logConfiguration = {
       logDriver = "awslogs"
@@ -71,7 +95,7 @@ resource "aws_ecs_task_definition" "this" {
         interval    = 30
         timeout     = 5
         retries     = 3
-        startPeriod = 10
+        startPeriod = 30
       }
     }
   ])
@@ -130,8 +154,8 @@ resource "aws_security_group" "ecs_service" {
 
 # Allow traffic from ALB Security Group
   ingress {
-    from_port       = 8083
-    to_port         = 8083
+    from_port       = 0
+    to_port         = 65535
     protocol        = "tcp"
     security_groups = [var.alb_sg_id]
     description     = "Allow from ALB"

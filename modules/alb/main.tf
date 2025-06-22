@@ -21,8 +21,8 @@ resource "aws_security_group" "alb_sg" {
   # Allow ingress from ALB only (for service-to-service communication)
   ingress {
     description     = "Allow traffic from ALB"
-    from_port       = 8083
-    to_port         = 8083
+    from_port       = 80
+    to_port         = 80
     protocol        = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -42,12 +42,12 @@ resource "aws_security_group" "alb_sg" {
 
 resource "aws_lb_target_group" "this" {
   name        = "${var.project}-tg"
-  port        = 80
+  port        = 8083
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
   health_check {
-    path                = "/"
+    path                = "/actuator/health"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2

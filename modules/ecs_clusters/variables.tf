@@ -13,6 +13,34 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "db_host" {
+  description = "Database host"
+  type        = string
+  
+}
+
+variable "db_port" {
+  description = "Database port"
+  type        = string
+  default = "5432"
+}
+
+variable "db_name" {
+  description = "Database name"
+  type        = string
+}
+
+variable "db_username" {
+  description = "Database username"
+  type        = string
+}
+
+variable "db_password" {
+  description = "Database password"
+  type        = string
+  sensitive   = true
+}
+
 variable "alb_listener_arn" {
   description = "ALB Listener ARN to attach ECS services"
   type        = string

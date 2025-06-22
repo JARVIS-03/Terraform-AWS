@@ -12,6 +12,7 @@ module "vpc" {
   azs              = var.azs
   public_subnet_cidrs     = ["10.0.1.0/24", "10.0.2.0/24"]
   private_subnet_cidrs   = ["10.0.3.0/24", "10.0.4.0/24"]
+  nat_gateway_ids       = module.nat_gateway.nat_gateway_ids
 }
 
 #NAT Gateway Module Config:
@@ -50,6 +51,11 @@ module "ecs_clusters" {
   alb_listener_arn   = module.alb.listener_arn
   alb_sg_id = module.alb.alb_sg_id
   aws_region = var.aws_region
+  db_host = module.rds.rds_endpoint
+  db_name = var.db_name
+  db_username = var.db_username
+  db_password = var.db_password
+
 
   services = {
     payment = {
@@ -73,10 +79,10 @@ module "rds" {
   vpc_id          = module.vpc.vpc_id
   subnet_ids      = module.vpc.private_subnet_ids
 
-  db_name         = "ecomdb"
+  db_name         = var.db_name
   db_username     = var.db_username
   db_password     = var.db_password
-  db_instance_class = "db.t3.micro"
+  db_instance_class = var.db_instance_class
   ecs_service_sg_id  = module.ecs_clusters.ecs_service_sg_id
 }
 

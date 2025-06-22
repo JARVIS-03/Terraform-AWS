@@ -30,6 +30,18 @@ variable "azs" {
   type        = list(string)
 }
 
+variable "db_instance_class" {
+  description = "Database instance class"
+  type = string
+  
+}
+
+
+variable "db_name" {
+  description = "Database name"
+  type        = string
+}
+
 variable "db_username" {
   description = "Username for the RDS instance"
   type        = string
@@ -57,5 +69,4 @@ variable "record_name" {
   description = "subdomain to create (e.g., app.example.com)"
   type        = string
 }
-
 
