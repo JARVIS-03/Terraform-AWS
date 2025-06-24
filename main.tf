@@ -48,7 +48,7 @@ module "ecs_clusters" {
   project            = var.project
   vpc_id             = module.vpc.vpc_id
   subnet_ids         = module.vpc.private_subnet_ids 
-  alb_listener_arn   = module.alb.listener_arn
+  alb_listener_arn   = module.alb.alb_listener_arn
   alb_sg_id = module.alb.alb_sg_id
   aws_region = var.aws_region
   db_host = module.rds.rds_endpoint
@@ -61,8 +61,8 @@ module "ecs_clusters" {
     payment = {
       container_name = "payment-service"
       container_port = 8083
-      cpu            = 256
-      memory         = 512
+      cpu            = 512
+      memory         = 1024
       desired_count  = 2
       image          = "${var.ecr_image}"
       health_path    = "/actuator/health"

@@ -18,16 +18,14 @@ resource "aws_security_group" "alb_sg" {
   description = "Allow HTTP"
   vpc_id      = var.vpc_id
 
-  # Allow ingress from ALB only (for service-to-service communication)
-  ingress {
-    description     = "Allow traffic from ALB"
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
+ ingress {
+    description = "Allow HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow outbound traffic to internet or RDS
   egress {
     from_port   = 0
     to_port     = 0
@@ -40,35 +38,41 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
-resource "aws_lb_target_group" "this" {
-  name        = "${var.project}-tg"
-  port        = 8083
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
-  target_type = "ip"
-  health_check {
-    path                = "/actuator/health"
-    interval            = 30
-    timeout             = 5
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    matcher             = "200"
-  }
-   tags = {
-    Name = "${var.project}-tg"
-  }
-}
+# resource "aws_lb_target_group" "this" {
+#   name        = "${var.project}-tg"
+#   port        = 8083
+#   protocol    = "HTTP"
+#   vpc_id      = var.vpc_id
+#   target_type = "ip"
+#   health_check {
+#     path                = "/actuator/health"
+#     startPeriod         = 90
+#     interval            = 90
+#     timeout             = 5
+#     healthy_threshold   = 2
+#     unhealthy_threshold = 2
+#     matcher             = "200"
+#   }
+#    tags = {
+#     Name = "${var.project}-tg"
+#   }
+# }
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.alb.arn
   port              = 80
   protocol          = "HTTP"
 
+ 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.this.arn
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Not Found"
+      status_code  = "404"
+    }
   }
 }
-
 
 

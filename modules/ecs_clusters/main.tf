@@ -60,6 +60,10 @@ resource "aws_ecs_task_definition" "this" {
 
       "environment": [
   {
+    name: "spring.profiles.active"
+    value: "prod"
+  },
+  {
     name: "DB_HOST",
     value: var.db_host
   },
@@ -95,8 +99,9 @@ resource "aws_ecs_task_definition" "this" {
         interval    = 30
         timeout     = 5
         retries     = 3
-        startPeriod = 30
+        startPeriod = 120
       }
+      essential = true
     }
   ])
 }
@@ -119,7 +124,7 @@ resource "aws_lb_target_group" "this" {
 
   health_check {
     path                = each.value.health_path
-    interval            = 30
+    interval            = 90
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2

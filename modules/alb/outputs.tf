@@ -13,12 +13,12 @@ output "alb_arn" {
   value = aws_lb.alb.arn
 }
 
-output "target_group_arn" {
-  description = "ECS service to register tasks with target group"
-  value = aws_lb_target_group.this.arn
-}
+# output "target_group_arn" {
+#   description = "ECS service to register tasks with target group"
+#   value = aws_lb_target_group.this.arn
+# }
 
-output "listener_arn" {
+output "alb_listener_arn" {
   description = "The ARN of the ALB listener"
   value       = aws_lb_listener.http.arn
 }

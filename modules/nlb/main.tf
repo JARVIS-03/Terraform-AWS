@@ -16,6 +16,14 @@ resource "aws_lb_target_group" "nlb_tg" {
   protocol    = "TCP" # NLB uses TCP
   vpc_id      = var.vpc_id
   target_type = "ip" # or "alb" if using ALB IPs
+
+  health_check {
+    port                = "80"
+    protocol            = "TCP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    interval            = 90
+  }
 }
 
 

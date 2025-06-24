@@ -11,7 +11,7 @@ resource "aws_db_subnet_group" "rds" {
 #RDS Security Group
 resource "aws_security_group" "rds_sg" {
   name        = "${var.project}-rds-sg"
-  description = "Allow traffic to RDS"
+  description = "Allow ECS services to access Postgres"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -19,7 +19,7 @@ resource "aws_security_group" "rds_sg" {
     to_port     = 5432
     protocol    = "tcp"
     security_groups = [var.ecs_service_sg_id]
-
+    description     = "Allow from ECS services"
   }
 
   egress {
